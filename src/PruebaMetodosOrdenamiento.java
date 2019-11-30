@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -56,6 +57,8 @@ class MetodosOrdenamiento {
 	System.out.println("Tiempo de ejecucion: " + (System.nanoTime() - t));
 	}
 
+	
+	
 	public void ordenamientoBurbuja3(int[] arr) {
 		t = System.nanoTime();
 
@@ -294,7 +297,130 @@ class MetodosOrdenamiento {
 		return i + 1;
 	}
 
+	// Mezcla Natural /////////////////////
+	
+	public void Mezclanatural(int[] arreglo) {
+		int izquierda=0,izq=0,derecha=arreglo.length-1,der=derecha;
+		boolean ordenado=false;
+		do {
+			ordenado=true;
+			izquierda=0;
+			while (izquierda<derecha){
+				izq=izquierda;
+				while(izq<derecha&&arreglo[izq]<=arreglo[izq+1]) {
+					izq++;
+				}
+				der=izq+1;
+				while(der==derecha-1||der<derecha&&arreglo[der]<=arreglo[der+1]) {
+					der++;	
+				}
+				if (der<=derecha) {
+					mezclaDirecta2(arreglo);
+					ordenado=false;
+				}
+				izquierda=izq;
+				
+			}
+		}while(!ordenado);
+		
+		}
+	
+	public void mezclaDirecta2(int[] arreglo) {
+		int i,j,k;
+		if (arreglo.length>1) {
+			int nElementosIzq=arreglo.length/2;
+			int nElementosDer=arreglo.length-nElementosIzq;
+			int arregloIzq[]=new int [nElementosIzq];
+			int arregloDer[]=new int [nElementosDer];
+			for (i = 0; i < nElementosIzq; i++) {
+				arregloIzq[i]=arreglo[i];
+			}
+			for (i = nElementosIzq; i < nElementosIzq+nElementosDer; i++) {
+				arregloDer[i-nElementosIzq]=arreglo[i];
+			}
+			arregloIzq=mezclaDirecta(arregloIzq);
+			arregloDer=mezclaDirecta(arregloDer);
+			i=0;
+			j=0;
+			k=0;
+			while(arregloIzq.length!=j&&arregloDer.length!=k) {
+				if(arregloIzq[j]<arregloDer[k]) {
+					arreglo[i]=arregloIzq[j];
+					i++;
+					j++;
+				}else {
+					arreglo[i]=arregloDer[k];
+					i++;
+					k++;
+				}
+			}
+			while(arregloIzq.length!=j) {
+				arreglo[i]=arregloIzq[j];
+				i++;
+				j++;
+			}
+			while(arregloDer.length!=k) {
+				arreglo[i]=arregloDer[k];
+				i++;
+				k++;
+			}
+		}
+	}
+	
+	
 }
+
+class MetodosBusqueda{
+
+	long t = 0; 
+	long c = 0;
+	long in = 0;
+	long r = 0;
+	int busquedaBinaria(int vector[], int posicionIzq, int posicionDer, int elementoA_Buscar) { 
+		t = System.nanoTime();     
+		for (int i = 0; i < vector.length; i++) {
+			r++;
+		}
+		for (int i = 0; i < vector.length; i++) {
+		in++;
+		if (posicionDer >= posicionIzq) { 
+	            int mitad = posicionIzq + (posicionDer - posicionIzq) / 2; 
+	            
+	            if (vector[mitad] == elementoA_Buscar) 
+	                return mitad; 
+	            
+	            if (vector[mitad] > elementoA_Buscar) 
+	                return busquedaBinaria(vector, posicionIzq, mitad - 1, elementoA_Buscar); 
+	            
+	            return busquedaBinaria(vector, mitad + 1, posicionDer, elementoA_Buscar); 
+	        }
+	}
+		c++;
+	        
+	        return -1;
+	
+	        
+	   }
+	public  int busquedaSecuencial(int []arreglo,int dato){
+		t = System.nanoTime(); 
+		for (int i = 0; i < arreglo.length; i++) {
+			r++;
+		}
+		
+		int posicion = -1;
+		  for(int i = 0; i < arreglo.length; i++){
+		      if(arreglo[i] == dato){
+		    posicion = i;
+		    break;//
+		   }
+		      in++;
+		 }c++;
+		return posicion;
+	}
+	
+
+}
+
 
 public class PruebaMetodosOrdenamiento {
 
@@ -312,12 +438,20 @@ public class PruebaMetodosOrdenamiento {
 		}
 		int n = arr.length;
 		int ar[] = Arrays.copyOf(arr, arr.length);
-
+		MetodosBusqueda mo = new MetodosBusqueda();
+		
+		
 		do {
 			ob.c = 0;
 			ob.in = 0;
 			ob.r = 0;
 			ob.t = 0;
+			mo.t = 0;
+			mo.in = 0;
+			mo.r = 0;
+			mo.c = 0;
+			
+			
 			arr = Arrays.copyOf(ar, ar.length);
 			System.out.println("Seleccione un metodo de ordenamiento");
 			System.out.println("1.- Metodo Burbuja");
@@ -391,25 +525,38 @@ public class PruebaMetodosOrdenamiento {
 				break;
 			case 7:
 				System.out.println("Ordenando por el metodo Mezcla natural");
-
+				ob.t = System.nanoTime();
+				ob.Mezclanatural(arr);
 				System.out.println("Arreglo ordenado");
+				System.out.println("Tiempo de ejecucion: " + (System.nanoTime() - ob.t));
 				System.out.println("Comparaciones: " + ob.c);
 				System.out.println("Recorridos: " + ob.r);
 				System.out.println("Intercambios: " + ob.in);
 				// System.out.println(Arrays.toString(arr));
 				break;
 			case 8:
-				System.out.println("Ordenando por el metodo Busqueda Binaria");
-
-				System.out.println("Arreglo ordenado");
-				System.out.println("Comparaciones: " + ob.c);
-				System.out.println("Recorridos: " + ob.r);
-				System.out.println("Intercambios: " + ob.in);
+				System.out.println("buscar elemento por el metodo Busqueda Binaria");
+				System.out.println("Ingrese un valor de el 0 al 99 para buscar");
+				mo.t = System.nanoTime();
+				int var = mo.busquedaBinaria(arr, 0, arr.length-1, e.nextInt());
+				System.out.println("posicion: ");
+				if (var == -1) {
+					System.out.println("No se encontro");
+				}else {
+					System.out.println(var);
+				}
+				System.out.println("Tiempo de ejecucion: " + (System.nanoTime() - mo.t));
+				System.out.println("Comparaciones: " + mo.c);
+				System.out.println("Recorridos: " + mo.r);
+				System.out.println("Intercambios: " + mo.in);
 				// System.out.println(Arrays.toString(arr));
 				break;
 			case 9:
 				System.out.println("Ordenando por el metodo Metodo busqueda por funciones hash");
-
+				mo.t = System.nanoTime();
+				System.out.println(mo.busquedaBinaria(arr, 0, arr.length-1, e.nextInt()));
+				System.out.println("Tiempo de ejecucion: " + (System.nanoTime() - mo.t));
+				
 				System.out.println("Arreglo ordenado");
 				System.out.println("Comparaciones: " + ob.c);
 				System.out.println("Recorridos: " + ob.r);
